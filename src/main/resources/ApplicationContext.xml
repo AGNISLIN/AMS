@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.2.0.xsd"
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Spring 装配 Bean 
+      Bean表示传统的JavaBean
+      EJB表示Enterprise JavaBeans
+      POJO 普通的Java类，（Spring可表示不严格遵循JavaBeans规范的松散JavaBean定义）
+    -->
+
+    <!-- 创建一个Bean -->
+    <bean id="d" class="DEMO.Demo">
+        <!--构造函数注入
+            最安全的保证Bean在使用前被完整配置,但不能配置复杂内容-->
+        <constructor-arg value="10"/><!--设置构造参数(一次一个)，如果不是默认的构造方法-->
+        <constructor-arg ref="K"/><!--参数是引用某一对象的话-->
+        <!--setter注入-->
+        <property name="s" value="hello"/><!--值得属性对应的值或引用(ref="xxx")-->
+        <property name="d2">
+            <bean class="DEMO.D2"></bean><!--这是一个内部Bean，它不能被重用-->
+        </property>
+        <property name="list">
+            <list>
+                <value>aaaa</value>
+                <ref bean="K"/>
+            </list>
+        </property>
+        <property name="d2s">
+            <map>
+                <entry key="X" value-ref="d2"/>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="K" class="DEMO.K"
+          init-method="intifunction"
+          destroy-method="destroyfunction">
+        <!--初始化时调用intifunction
+            销毁时调用destroyfunction
+            也可以在类中实现InitializingBean和DisposableBean接口，去缺点是会与StringAPI耦合
+
+            可以在Beans的属性里设置
+                default-inti-method
+                default-destory-method
+            来设置上下文所有的Bean-->
+    </bean>
+
+    <!--子Bean不必具有和相同的父类型，-->
+    <bean id="base" abstract="true">
+        <property name="v" value="LALALA"></property>
+    </bean>
+    <bean id="d2" class="DEMO.D2" parent="base"></bean><!--d2 将继承base的v属性设置-->
+
+
+    <!--Spring配置非Spring初始化的Bean
+        在bean属性中将abstract设置为true，表示不由Spring实例化-它是在Spring之外创建的
+        同时，在类前加上  @Configurable("beanId"),表示不由Spring创建实例，将类与Bean关联起来
+        来要添加 <aop:spring-configured/>
+    -->
+
+
+
+
+    <bean id="xxx"></bean>
+
+    <!--
+    aop 的命名空间
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.2.0.xsd
+    -->
+    <aop:config>
+        <!--创建切面-->
+        <aop:aspect ref="xxx">
+            <!--创建切入点-->
+            <aop:pointcut id="pointcutId"
+                          expression="execution( * *.cutfunction(..) ) and target(bean)"/> <!--绑定要切入的方法-->
+
+            <aop:before method="beforefunction"
+                        pointcut-ref="pointcutId"
+                        arg-names="argn"/> <!--切入前调用-->
+            <aop:after method="afterfunction"
+                       pointcut-ref="pointcutId"
+                       arg-names="argn"/> <!--切入后调用-->
+        </aop:aspect>
+    </aop:config>
+
+
+
+</beans>

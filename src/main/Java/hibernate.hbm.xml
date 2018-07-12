@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="me.agnis.entity.Account" table="account" schema="ams">
+        <id name="accountName" column="account_name"/>
+        <property name="passwordSha1" column="password_sha1"/>
+        <property name="personalInfo" column="personal_info"/>
+    </class>
+    <class name="me.agnis.entity.CrudOperation" table="crud_operation" schema="ams">
+        <id name="curdCode" column="curd_code"/>
+        <property name="read" column="read"/>
+        <property name="alter" column="alter"/>
+        <property name="download" column="download"/>
+        <property name="upload" column="upload"/>
+    </class>
+    <class name="me.agnis.entity.Document" table="document" schema="ams">
+        <id name="documentId" column="document_id"/>
+        <property name="documentName" column="document_name"/>
+        <property name="author" column="author"/>
+        <property name="suffix" column="suffix"/>
+        <property name="size" column="size"/>
+        <property name="uploadTime" column="upload_time"/>
+        <property name="description" column="description"/>
+        <property name="type" column="type"/>
+        <property name="path" column="path"/>
+    </class>
+    <class name="me.agnis.entity.DocumentLabel" table="document_label" schema="ams">
+        <id name="id" column="id"/>
+        <many-to-one name="label" class="me.agnis.entity.Label">
+            <column name="label_id"/>
+        </many-to-one>
+    </class>
+    <class name="me.agnis.entity.GroupElement" table="group_element" schema="ams">
+        <id name="id" column="id"/>
+        <many-to-one name="labelGroupByGroupId" class="me.agnis.entity.LabelGroup">
+            <column name="group_id"/>
+        </many-to-one>
+        <many-to-one name="labelGroupByGroupId_0" class="me.agnis.entity.LabelGroup">
+            <column name="group_id"/>
+        </many-to-one>
+        <many-to-one name="label" class="me.agnis.entity.Label">
+            <column name="label_id"/>
+        </many-to-one>
+    </class>
+    <class name="me.agnis.entity.Label" table="label" schema="ams">
+        <id name="id" column="id"/>
+        <property name="labelName" column="label_name"/>
+        <property name="value" column="value"/>
+    </class>
+    <class name="me.agnis.entity.LabelGroup" table="label_group" schema="ams">
+        <id name="id" column="id"/>
+        <property name="ownerAccountName" column="owner_account_name"/>
+        <property name="groupName" column="group_name"/>
+        <property name="groupValue" column="group_value"/>
+    </class>
+    <class name="me.agnis.entity.Permission" table="permission" schema="ams">
+        <id name="id" column="id"/>
+        <property name="roleId" column="role_id"/>
+        <property name="owner" column="owner"/>
+        <property name="docType" column="doc_type"/>
+        <property name="curdOperation" column="curd_operation"/>
+    </class>
+    <class name="me.agnis.entity.PersonalInfo" table="personal_info" schema="ams">
+        <id name="id" column="id"/>
+        <property name="name" column="name"/>
+        <property name="qq" column="qq"/>
+        <property name="email" column="email"/>
+        <property name="sex" column="sex"/>
+        <property name="age" column="age"/>
+        <property name="pohtoPath" column="pohto_path"/>
+        <property name="introduce" column="introduce"/>
+        <property name="phoneNumber" column="phone_number"/>
+        <many-to-one name="role" class="me.agnis.entity.Role">
+            <column name="role"/>
+        </many-to-one>
+    </class>
+    <class name="me.agnis.entity.Record" table="record" schema="ams">
+        <id name="id" column="id"/>
+        <property name="accountName" column="account_name"/>
+        <property name="operation" column="operation"/>
+        <property name="documentId" column="document_id"/>
+        <property name="recordTime" column="record_time"/>
+    </class>
+    <class name="me.agnis.entity.Role" table="role" schema="ams">
+        <id name="roleId" column="role_id"/>
+        <property name="permissionId" column="permission_id"/>
+        <property name="roleName" column="role_name"/>
+        <property name="description" column="description"/>
+    </class>
+</hibernate-mapping>
